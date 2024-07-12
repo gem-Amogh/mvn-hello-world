@@ -43,3 +43,4 @@ node {
     )
     echo "Successfully deployed to Kubernetes"
 }
+}
