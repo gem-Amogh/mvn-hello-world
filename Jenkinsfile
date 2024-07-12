@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     tools {
+        docker 'docker'
         maven 'maven' // The name you gave to the Maven installation
     }
 
@@ -23,6 +24,14 @@ pipeline {
             }
         }
 
-       
+        
+        stage('Check Docker Version') {
+            steps {
+                script {
+                    // Run Docker version command
+                    sh 'docker --version'
+                }
+            }
+        }       
     }
 }
