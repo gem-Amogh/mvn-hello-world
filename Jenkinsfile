@@ -3,6 +3,8 @@ node {
     def KUBE_CONFIG_PATH = 'C:\\Users\\Amogh.Malviya\\.kube\\config'
     def NEXUS_URL = 'http://localhost:8082/repository/mvn-hello/'
     def DOCKER_IMAGE = 'mvn-hello-world'
+    def kubeConfig = credentials('kube') // Replace with your Kubernetes config credentials ID
+    def kubeNamespace = 'default'
 
     // Define tools to be used
     def dockerTool = tool name: 'docker'
@@ -32,11 +34,16 @@ node {
         echo "Successfully pushed to Nexus repository"
     }
 
-    // Stage: Deploy to Minikube
-    stage('Deploy to Minikube') {
-        withEnv(["KUBECONFIG=${KUBE_CONFIG_PATH}"]) {
-            sh "kubectl version"
-        }
-        echo "Deployment Successful....."
+     stage('Deploy to Kubernetes') {
+        kubernetesDeploy(
+            kubeconfigId: kubeConfig,
+            configs: 'path/to/service.yaml,path/to/deployment.yaml',
+            enableConfigSubstitution: true,
+            namespace: kubeNamespace,
+            labelSelectors: [
+                app: 'mvn-hello-world'
+            ]
+        )
+        echo "Successfully deployed to Kubernetes"
     }
 }
