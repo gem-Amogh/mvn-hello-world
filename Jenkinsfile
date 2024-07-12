@@ -27,7 +27,7 @@ pipeline {
             steps {
                 script {
                     // Build the Maven project
-                    sh 'docker -v'
+                    sh 'docker container ls'
                 }
             }
         }
