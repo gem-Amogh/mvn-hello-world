@@ -53,10 +53,14 @@ pipeline {
         }
 
         stage('Deploy to Minikube') {
-        withEnv(["KUBECONFIG=${KUBE_CONFIG_PATH}"]) {
+           steps{
+               script{
+                    withEnv(["KUBECONFIG=${KUBE_CONFIG_PATH}"]) {
             bat "kubectl version"
         }
         echo "Deployment Successful....."
+               }
+           }
         }
 
         
