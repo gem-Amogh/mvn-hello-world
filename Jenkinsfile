@@ -3,8 +3,8 @@ node {
     def KUBE_CONFIG_PATH = 'C:\\Users\\Amogh.Malviya\\.kube\\config'
     def NEXUS_URL = 'http://localhost:8082/repository/mvn-hello/'
     def DOCKER_IMAGE = 'mvn-hello-world'
-    def kubeConfig = credentials('kube') // Replace with your Kubernetes config credentials ID
-    def kubeNamespace = 'default'
+    def kubeConfig = credentials('k1') // Replace with your Kubernetes config credentials ID
+    
 
     // Define tools to be used
     def dockerTool = tool name: 'docker'
