@@ -25,13 +25,13 @@ pipeline {
         }
 
         
-        stage('Check Docker Version') {
+        stage('Build Docker Image') {
             steps {
                 script {
-                    // Run Docker version command
-                    sh 'docker --version'
+                    // Build Docker image
+                    sh 'docker build -t mvn-hello-world .'
                 }
             }
-        }       
+        }      
     }
 }
