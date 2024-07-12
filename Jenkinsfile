@@ -1,9 +1,11 @@
 pipeline {
     agent any
 
-    def DOCKER_IMAGE = "mvn-hello-world"
-    def DOCKER_REGISTRY = "localhost:8081/repository/mvn-hello/"
-    def NEXUS_CREDENTIALS = "nexus"
+    environment {
+        // Define the Nexus repository URL and your Docker image name/tag
+        NEXUS_URL = 'https://localhost:8081/repository/mvn-hello/'
+        DOCKER_IMAGE = 'mvn-hello-world'
+    }
 
     tools {
         dockerTool 'docker'
@@ -38,13 +40,19 @@ pipeline {
             }
         }  
 
-        stage('Pushing to nexus repo'){
-            docker.withRegistry("http://${DOCKER_REGSITRY}", "${NEXUS_CREDENTIALS}") {
-                docker.image("${DOCKER_IMAGE}:latest").push()
-            }
+        stage('Push Docker Image to Nexus') {
+            steps {
+                script {
+                    // Authenticate with Nexus using credentials
+                    
+                        // Tag the Docker image for Nexus registry
+                        
 
-            echo "successfully added  to nexus"
-    
+                        // Push Docker image to Nexus registry
+                        sh "docker push $NEXUS_URL/$DOCKER_IMAGE"
+                    
+                }
+            }
         }
     }
 }
