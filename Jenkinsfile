@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         // Define the Nexus repository URL and your Docker image name/tag
-        NEXUS_URL = 'https://localhost:8082/repository/mvn-hello/'
+        NEXUS_URL = 'http://localhost:8082/repository/mvn-hello/'
         DOCKER_IMAGE = 'mvn-hello-world'
     }
 
