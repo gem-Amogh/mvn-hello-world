@@ -50,5 +50,16 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    // Deploy Docker image to Kubernetes
+                    sh 'kubectl -v'
+                    
+                    echo "kubectl running success"
+                }
+            }
+        }
     }
 }
