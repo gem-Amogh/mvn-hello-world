@@ -5,8 +5,8 @@ node {
     def DOCKER_IMAGE = 'mvn-hello-world'
 
     // Define tools to be used
-    def dockerTool = tool name: 'docker', type: 'hudson.plugins.docker.tools.DockerTool'
-    def mavenTool = tool name: 'maven', type: 'hudson.tasks.Maven$MavenInstallation'
+    def dockerTool = tool name: 'docker'
+    def mavenTool = tool name: 'maven'
 
     // Stage: Checkout
     stage('Checkout') {
