@@ -1,1 +1,13 @@
 
+apiVersion: v1
+kind: Service
+metadata:
+  name: mvn-hello-world-service
+spec:
+  selector:
+    app: mvn-hello-world
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8085
+  type: NodePort
