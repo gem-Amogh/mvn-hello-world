@@ -23,7 +23,7 @@ pipeline {
             }
         }
 
-        stage('Build docker image) {
+        stage('Build docker image') {
             steps {
                 script {
                     // Build the Maven project
