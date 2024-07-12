@@ -40,19 +40,11 @@ pipeline {
             }
         }  
 
-        stage('Push Docker Image to Nexus') {
-            steps {
-                script {
-                    // Authenticate with Nexus using credentials
-                    
-                        // Tag the Docker image for Nexus registry
-                        
-
-                        // Push Docker image to Nexus registry
-                        sh "docker push $NEXUS_URL/$DOCKER_IMAGE"
-                    
-                }
+        stage('Push Docker image to Nexus') {
+            docker.withRegistry("http://localhost:8082/repository/mvn-hello/", "nexus") {
+                docker.image("${DOCKER_IMAGE}:latest").push()
             }
-        }
+        echo "Successfully pushed to nexus repository"
+    }
     }
 }
