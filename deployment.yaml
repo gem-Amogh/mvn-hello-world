@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: mvn-hello-world-deployment
 spec:
-  replicas: 1
+  replicas: 1  # Number of instances (pods) to run
   selector:
     matchLabels:
       app: mvn-hello-world
@@ -13,7 +13,21 @@ spec:
         app: mvn-hello-world
     spec:
       containers:
-      - name: mvn-hello-world
-        image: localhost:8081/repository/mvn-hello/mvn-hello-world:latest
-        ports:
-        - containerPort: 8085
+        - name: mvn-hello-world-container
+          image: tomcat:9.0-jdk11-openjdk  # Docker image to use
+          ports:
+            - containerPort: 8080  # Port your application listens on inside the container
+          command: ["catalina.sh", "run"]  # Command to start Tomcat (if needed)
+          lifecycle:
+            postStart:
+              exec:
+                command: ["sh", "-c", "rm -rf /usr/local/tomcat/webapps/*"]
+          volumeMounts:
+            - name: war-volume
+              mountPath: /usr/local/tomcat/webapps/ROOT.war  # Path to deploy WAR file
+              subPath: mvn-hello-world.war  # Name of the WAR file
+
+      volumes:
+        - name: war-volume
+          hostPath:
+            path: /path/to/mvn-hello-world.war  # Local path to the WAR file on the host machine
