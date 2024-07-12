@@ -34,14 +34,16 @@ node {
         echo "Successfully pushed to Nexus repository"
     }
 
-     
     stage('Deploy to Kubernetes') {
-        kubeCtl([
-            command: 'apply',
-            config: 'deployment.yaml'
-        ])
-        echo "Successfully deployed to Kubernetes"
-    }
-    
+    // Replace with your Kubernetes config credentials ID
+
+    kubernetesDeploy(
+        kubeconfigId: kubeConfig,
+        manifests: 'kubernetes.yaml', // Reference to your combined YAML file
+        enableConfigSubstitution: true
+        // No namespace specified, deploys to the default namespace
+    )
+    echo "Successfully deployed to Kubernetes"
+}
 
 }
