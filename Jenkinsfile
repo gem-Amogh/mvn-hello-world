@@ -7,11 +7,10 @@ pipeline {
         DOCKER_IMAGE = 'mvn-hello-world'
     }
 
-     tools {
-        dockerTool 'docker' // for docker daemon connection 
+    tools {
+        dockerTool 'docker'
         maven 'maven' // The name you gave to the Maven installation
     }
-
 
     stages {
         stage('Checkout') {
@@ -38,7 +37,18 @@ pipeline {
                     sh 'docker build -t ${DOCKER_IMAGE} .'
                 }
             }
-        } 
+        }  
 
+        stage('Push Docker image to Nexus') {
+            steps {
+                script {
+                    // Push Docker image to Nexus repository
+                    docker.withRegistry('http://localhost:8082/repository/mvn-hello/', 'nexus') {
+                        docker.image("${DOCKER_IMAGE}:latest").push()
+                    }
+                    echo "Successfully pushed to Nexus repository"
+                }
+            }
+        }
     }
 }
