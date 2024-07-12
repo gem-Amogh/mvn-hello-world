@@ -1,6 +1,12 @@
 pipeline {
     agent any
 
+    environment {
+        // Define the Nexus repository URL and your Docker image name/tag
+        NEXUS_URL = 'http://localhost:8082/repository/mvn-hello/'
+        DOCKER_IMAGE = 'mvn-hello-world'
+    }
+
      tools {
         dockerTool 'docker' // for docker daemon connection 
         maven 'maven' // The name you gave to the Maven installation
@@ -29,10 +35,10 @@ pipeline {
             steps {
                 script {
                     // Build Docker image
-                    sh 'docker -v'
+                    sh 'docker build -t ${DOCKER_IMAGE} .'
                 }
             }
-        }
+        } 
 
     }
 }
