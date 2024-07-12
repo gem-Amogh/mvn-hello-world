@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         // Define the Nexus repository URL and your Docker image name/tag
+        KUBE_CONFIG_PATH = 'C:\Users\Amogh.Malviya\.kube\config'
         NEXUS_URL = 'http://localhost:8082/repository/mvn-hello/'
         DOCKER_IMAGE = 'mvn-hello-world'
     }
@@ -51,15 +52,14 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kubernetes') {
-            steps {
-                script {
-                    // Deploy Docker image to Kubernetes
-                    sh 'kubectl -v'
-                    
-                    echo "kubectl running success"
-                }
-            }
+        stage('Deploy to Minikube') {
+        withEnv(["KUBECONFIG=${KUBE_CONFIG_PATH}"]) {
+            bat "kubectl version"
         }
+        echo "Deployment Successful....."
+        }
+
+        
+        
     }
 }
