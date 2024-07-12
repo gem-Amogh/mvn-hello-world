@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mvn-hello-world-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mvn-hello-world
+  template:
+    metadata:
+      labels:
+        app: mvn-hello-world
+    spec:
+      containers:
+      - name: mvn-hello-world
+        image: localhost:8081/repository/mvn-hello/mvn-hello-world:latest
+        ports:
+        - containerPort: 8085
