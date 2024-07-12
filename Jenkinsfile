@@ -38,10 +38,10 @@ node {
     stage('Deploy to Kubernetes') {
         kubeCtl([
             command: 'apply',
-            config: 'kubernetes.yaml'
+            config: 'deployment.yaml'
         ])
         echo "Successfully deployed to Kubernetes"
     }
-    echo "Successfully deployed to Kubernetes"
+    
 
 }
