@@ -16,8 +16,8 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout the repository from GitHub
-                git url:'https://github.com/gem-Amogh/mvn-hello-world.git' , branch:'main'
-                echo "clone done"
+                git url:'https://github.com/gem-Amogh/mvn-hello-world.git', branch:'main'
+                echo "Clone done"
             }
         }
 
@@ -30,26 +30,25 @@ pipeline {
             }
         }
 
-        
         stage('Build Docker Image') {
             steps {
                 script {
                     // Build Docker image
-                    sh 'docker build -t mvn-hello-world .'
+                    sh 'docker build -t ${DOCKER_IMAGE} .'
                 }
             }
         }  
 
         stage('Push Docker image to Nexus') {
-            steps{
-                script{
-                    sh 'docker.withRegistry("http://localhost:8082/repository/mvn-hello/", "nexus") {
-                docker.image("${DOCKER_IMAGE}:latest").push()'
+            steps {
+                script {
+                    // Push Docker image to Nexus repository
+                    docker.withRegistry('http://localhost:8082/repository/mvn-hello/', 'nexus') {
+                        docker.image("${DOCKER_IMAGE}:latest").push()
+                    }
+                    echo "Successfully pushed to Nexus repository"
                 }
             }
-                echo "Successfully pushed to nexus repository"
-            }
-            
-    }
+        }
     }
 }
