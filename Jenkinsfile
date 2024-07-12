@@ -22,5 +22,14 @@ pipeline {
                 }
             }
         }
+
+        stage('Build docker image {
+            steps {
+                script {
+                    // Build the Maven project
+                    sh 'docker -v'
+                }
+            }
+        }
     }
 }
