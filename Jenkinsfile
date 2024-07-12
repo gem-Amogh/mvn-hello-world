@@ -41,10 +41,13 @@ pipeline {
         }  
 
         stage('Push Docker image to Nexus') {
-            docker.withRegistry("http://localhost:8082/repository/mvn-hello/", "nexus") {
+            steps{
+                docker.withRegistry("http://localhost:8082/repository/mvn-hello/", "nexus") {
                 docker.image("${DOCKER_IMAGE}:latest").push()
             }
-        echo "Successfully pushed to nexus repository"
+                echo "Successfully pushed to nexus repository"
+            }
+            
     }
     }
 }
