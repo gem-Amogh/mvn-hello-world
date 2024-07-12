@@ -34,16 +34,14 @@ node {
         echo "Successfully pushed to Nexus repository"
     }
 
-     stage('Deploy to Kubernetes') {
-        kubernetesDeploy(
-            kubeconfigId: kubeConfig,
-            configs: 'path/to/service.yaml,path/to/deployment.yaml',
-            enableConfigSubstitution: true,
-            namespace: kubeNamespace,
-            labelSelectors: [
-                app: 'mvn-hello-world'
-            ]
-        )
-        echo "Successfully deployed to Kubernetes"
-    }
+     kubernetesDeploy(
+        kubeconfigId: kubeConfig,
+        configs: 'service.yaml,deployment.yaml',
+        enableConfigSubstitution: true,
+       
+        labelSelectors: [
+            app: 'mvn-hello-world'
+        ]
+    )
+    echo "Successfully deployed to Kubernetes"
 }
