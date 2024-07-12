@@ -1,69 +1,42 @@
-pipeline {
-    agent any
+node {
+    // Define environment variables
+    def KUBE_CONFIG_PATH = 'C:\\Users\\Amogh.Malviya\\.kube\\config'
+    def NEXUS_URL = 'http://localhost:8082/repository/mvn-hello/'
+    def DOCKER_IMAGE = 'mvn-hello-world'
 
-    environment {
-        // Define the Nexus repository URL and your Docker image name/tag
-        KUBE_CONFIG_PATH = 'C:\\Users\\Amogh.Malviya\\.kube\\config'
-        NEXUS_URL = 'http://localhost:8082/repository/mvn-hello/'
-        DOCKER_IMAGE = 'mvn-hello-world'
+    // Define tools to be used
+    def dockerTool = tool name: 'docker', type: 'hudson.plugins.docker.tools.DockerTool'
+    def mavenTool = tool name: 'maven', type: 'hudson.tasks.Maven$MavenInstallation'
+
+    // Stage: Checkout
+    stage('Checkout') {
+        git url: 'https://github.com/gem-Amogh/mvn-hello-world.git', branch: 'main'
+        echo "Clone done"
     }
 
-    tools {
-        dockerTool 'docker'
-        maven 'maven' // The name you gave to the Maven installation
+    // Stage: Build Maven Project
+    stage('Build Maven Project') {
+        sh "${mavenTool}/bin/mvn clean install"
     }
 
-    stages {
-        stage('Checkout') {
-            steps {
-                // Checkout the repository from GitHub
-                git url:'https://github.com/gem-Amogh/mvn-hello-world.git', branch:'main'
-                echo "Clone done"
-            }
+    // Stage: Build Docker Image
+    stage('Build Docker Image') {
+        sh "${dockerTool}/bin/docker build -t ${DOCKER_IMAGE} ."
+    }
+
+    // Stage: Push Docker image to Nexus
+    stage('Push Docker image to Nexus') {
+        docker.withRegistry("${NEXUS_URL}", 'nexus') {
+            docker.image("${DOCKER_IMAGE}:latest").push()
         }
+        echo "Successfully pushed to Nexus repository"
+    }
 
-        stage('Build Maven Project') {
-            steps {
-                script {
-                    // Build the Maven project
-                    sh 'mvn clean install'
-                }
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    // Build Docker image
-                    sh 'docker build -t ${DOCKER_IMAGE} .'
-                }
-            }
-        }  
-
-        stage('Push Docker image to Nexus') {
-            steps {
-                script {
-                    // Push Docker image to Nexus repository
-                    docker.withRegistry('http://localhost:8082/repository/mvn-hello/', 'nexus') {
-                        docker.image("${DOCKER_IMAGE}:latest").push()
-                    }
-                    echo "Successfully pushed to Nexus repository"
-                }
-            }
-        }
-
-        stage('Deploy to Minikube') {
-           steps{
-               script{
-                    withEnv(["KUBECONFIG=${KUBE_CONFIG_PATH}"]) {
+    // Stage: Deploy to Minikube
+    stage('Deploy to Minikube') {
+        withEnv(["KUBECONFIG=${KUBE_CONFIG_PATH}"]) {
             bat "kubectl version"
         }
         echo "Deployment Successful....."
-               }
-           }
-        }
-
-        
-        
     }
 }
