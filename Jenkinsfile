@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        docker 'docker'
+        tool name: 'docker', type: 'org.jenkinsci.plugins.docker.commons.tools.DockerTool'
         maven 'maven' // The name you gave to the Maven installation
     }
 
