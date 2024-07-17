@@ -1,7 +1,7 @@
 node {
     // Define environment variables
     def KUBE_CONFIG_PATH = 'C:\\Users\\Amogh.Malviya\\.kube\\config'
-    def NEXUS_URL = 'http:/localhost:8082/repository/mvn-hello/'
+    def NEXUS_URL = 'localhost:8082/repository/mvn-hello/'
     def DOCKER_IMAGE = 'mvn-hello-world'
     def KUBE_CONFIG_CREDENTIALS_ID = 'k1' // Replace with your Kubernetes config credentials ID
     def DOCKER_CREDENTIALS_ID = 'nexus' // Replace with your Docker registry credentials ID
