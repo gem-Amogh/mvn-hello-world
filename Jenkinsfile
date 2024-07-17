@@ -30,9 +30,9 @@ node {
 
     // Stage: Push Docker image to Nexus
    stage('Push Docker Image to Nexus') {
-        bat "\"${DOCKER_PATH}\" tag ${DOCKER_IMAGE}:latest ${NEXUS_URL}${DOCKER_IMAGE}:latest"
+        bat "\"${dockerPath}\" tag ${DOCKER_IMAGE}:latest ${NEXUS_URL}${DOCKER_IMAGE}:latest"
         // Push the Docker image to Nexus repository
-        bat "\"${DOCKER_PATH}\" push ${NEXUS_URL}${DOCKER_IMAGE}:latest"
+        bat "\"${dockerPath}\" push ${NEXUS_URL}${DOCKER_IMAGE}:latest"
         }
 
 //     stage('Deploy to Kubernetes') {
