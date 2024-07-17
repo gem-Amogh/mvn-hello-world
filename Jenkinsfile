@@ -34,10 +34,10 @@ node {
         echo "Successfully pushed to Nexus repository"
     }
 
-    stage('Deploy to Kubernetes') {
-    // Replace with your Kubernetes config credentials ID
+//     stage('Deploy to Kubernetes') {
+//     // Replace with your Kubernetes config credentials ID
 
-//     kubernetesDeploy(
+// //     kubernetesDeploy(
 //         kubeconfigId: kubeConfig,
 //         manifests: 'kubernetes.yaml', // Reference to your combined YAML file
 //         enableConfigSubstitution: true
