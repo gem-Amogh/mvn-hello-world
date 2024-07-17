@@ -4,6 +4,7 @@ node {
     def NEXUS_URL = 'http://localhost:8082/repository/mvn-hello/'
     def DOCKER_IMAGE = 'mvn-hello-world'
     def kubeConfig = credentials('k1') // Replace with your Kubernetes config credentials ID
+    def dockerPath = 'C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe'
 
 
     // Define tools to be used
@@ -23,16 +24,15 @@ node {
 
     // Stage: Build Docker Image
     stage('Build Docker Image') {
-        def dockerPath = 'C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe'
+       
         bat "\"${dockerPath}\" build -t ${DOCKER_IMAGE}:latest ."
     }
 
     // Stage: Push Docker image to Nexus
    stage('Push Docker Image to Nexus') {
-        docker.withRegistry("${NEXUS_URL}", "${DOCKER_CREDENTIALS_ID}") {
-                docker.image("${DOCKER_IMAGE}:latest").push()
-            }
-            echo "Successfully pushed to Nexus repository"
+        bat "\"${dockerPath}\" tag ${DOCKER_IMAGE}:latest ${NEXUS_URL}/${DOCKER_IMAGE}:latest"
+        // Push the Docker image to Nexus repository
+        bat "\"${dockerPath}\" push ${NEXUS_URL}/${DOCKER_IMAGE}:latest"
         }
 
 //     stage('Deploy to Kubernetes') {
