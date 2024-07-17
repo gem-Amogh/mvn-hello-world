@@ -23,7 +23,8 @@ node {
 
     // Stage: Build Docker Image
     stage('Build Docker Image') {
-        bat "${dockerTool}/bin/docker build -t ${DOCKER_IMAGE} ."
+        def dockerPath = 'C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe'
+        bat "\"${dockerPath}\" build -t ${DOCKER_IMAGE}:latest ."
     }
 
     // Stage: Push Docker image to Nexus
