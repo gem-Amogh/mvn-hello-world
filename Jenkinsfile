@@ -1,34 +1,49 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: mvn-hello-world-deployment
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: mvn-hello-world
-  template:
-    metadata:
-      labels:
-        app: mvn-hello-world
-    spec:
-      containers:
-        - name: mvn-hello-world-container
-          image: localhost:8082/repository/mvn-hello:latest
-          ports:
-            - containerPort: 8080
----
+node {
+    // Define environment variables
+    def KUBE_CONFIG_PATH = 'C:\\Users\\Amogh.Malviya\\.kube\\config'
+    def NEXUS_URL = 'http://localhost:8082/repository/mvn-hello/'
+    def DOCKER_IMAGE = 'mvn-hello-world'
+    def kubeConfig = credentials('k1') // Replace with your Kubernetes config credentials ID
 
 
-apiVersion: v1
-kind: Service
-metadata:
-  name: mvn-hello-world-service
-spec:
-  selector:
-    app: mvn-hello-world
-  ports:
-    - protocol: TCP
-      port: 8086
-      targetPort: 8080
-  type: NodePort
+    // Define tools to be used
+    def dockerTool = tool name: 'docker'
+    def mavenTool = tool name: 'maven'
+
+    // Stage: Checkout
+    stage('Checkout') {
+        git url: 'https://github.com/gem-Amogh/mvn-hello-world.git', branch: 'main'
+        echo "Clone done"
+    }
+
+    // Stage: Build Maven Project
+    stage('Build Maven Project') {
+        sh "${mavenTool}/bin/mvn clean install"
+    }
+
+    // Stage: Build Docker Image
+    stage('Build Docker Image') {
+        sh "${dockerTool}/bin/docker build -t ${DOCKER_IMAGE} ."
+    }
+
+    // Stage: Push Docker image to Nexus
+    stage('Push Docker image to Nexus') {
+        docker.withRegistry("${NEXUS_URL}", 'nexus') {
+            docker.image("${DOCKER_IMAGE}:latest").push()
+        }
+        echo "Successfully pushed to Nexus repository"
+    }
+
+    stage('Deploy to Kubernetes') {
+    // Replace with your Kubernetes config credentials ID
+
+//     kubernetesDeploy(
+//         kubeconfigId: kubeConfig,
+//         manifests: 'kubernetes.yaml', // Reference to your combined YAML file
+//         enableConfigSubstitution: true
+//         // No namespace specified, deploys to the default namespace
+//     )
+//     echo "Successfully deployed to Kubernetes"
+// }
+
+}
