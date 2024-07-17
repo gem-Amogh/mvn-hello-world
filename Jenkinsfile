@@ -28,12 +28,12 @@ node {
     }
 
     // Stage: Push Docker image to Nexus
-    stage('Push Docker image to Nexus') {
-        docker.withRegistry("${NEXUS_URL}", 'nexus') {
-            docker.image("${DOCKER_IMAGE}:latest").push()
+   stage('Push Docker Image to Nexus') {
+        docker.withRegistry("${NEXUS_URL}", "${DOCKER_CREDENTIALS_ID}") {
+                docker.image("${DOCKER_IMAGE}:latest").push()
+            }
+            echo "Successfully pushed to Nexus repository"
         }
-        echo "Successfully pushed to Nexus repository"
-    }
 
 //     stage('Deploy to Kubernetes') {
 //     // Replace with your Kubernetes config credentials ID
