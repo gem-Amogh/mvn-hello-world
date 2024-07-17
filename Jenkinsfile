@@ -25,7 +25,7 @@ node {
     // Stage: Build Docker Image
     stage('Build Docker Image') {
        
-        bat "\"${dockerPath}\" build -t ${DOCKER_IMAGE}:latest ."
+        bat "\"${DOCKER_PATH}\" build -t ${DOCKER_IMAGE}:latest ."
     }
 
     // Stage: Push Docker image to Nexus
