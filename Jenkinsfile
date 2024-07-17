@@ -18,12 +18,12 @@ node {
 
     // Stage: Build Maven Project
     stage('Build Maven Project') {
-        sh "${mavenTool}/bin/mvn clean install"
+        bat "${mavenTool}/bin/mvn clean install"
     }
 
     // Stage: Build Docker Image
     stage('Build Docker Image') {
-        sh "${dockerTool}/bin/docker build -t ${DOCKER_IMAGE} ."
+        bat "${dockerTool}/bin/docker build -t ${DOCKER_IMAGE} ."
     }
 
     // Stage: Push Docker image to Nexus
